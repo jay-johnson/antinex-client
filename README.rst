@@ -13,7 +13,7 @@ pip install antinex-client
 Run Predictions
 ===============
 
-These examples use the default user ``root`` with password ``123321```. It is advised to change this to your own user in the future.
+These examples use the default user ``root`` with password ``123321``. It is advised to change this to your own user in the future.
 
 Train a Deep Neural Network with a JSON List of Records
 -------------------------------------------------------
