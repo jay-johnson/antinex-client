@@ -35,8 +35,8 @@ If you're running outside docker make sure to clone the repo with:
 
     git clone https://github.com/jay-johnson/antinex-datasets.git /opt/antinex-datasets    
 
-Train the Django Defensive Deepn Neural Network
------------------------------------------------
+Train the Django Defensive Deep Neural Network
+----------------------------------------------
 
 Please wait as this will take a few minutes to return and convert the predictions to a pandas DataFrame.
 
