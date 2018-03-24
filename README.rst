@@ -53,7 +53,7 @@ Development
 -----------
 ::
 
-    virtualenv -p python3 ~/.venvs/antinexclient && source ~/.venvs/antinexcore/bin/activate && pip install -e .
+    virtualenv -p python3 ~/.venvs/antinexclient && source ~/.venvs/antinexclient/bin/activate && pip install -e .
 
 Testing
 -------
