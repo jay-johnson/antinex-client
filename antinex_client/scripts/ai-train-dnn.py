@@ -102,7 +102,7 @@ if args.debug:
 
 usage = ("Please run with -u <username> "
          "-p <password> -e <email> "
-         "-h <AntiNex URL http://localhost:8080> -f <path to json file>")
+         "-a <AntiNex URL http://localhost:8080> -f <path to json file>")
 
 valid = True
 if not user or user == "user-not-set":
