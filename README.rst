@@ -51,7 +51,7 @@ Please wait as this will take a few minutes to return and convert the prediction
 Using Pre-trained Neural Networks to make Predictions
 -----------------------------------------------------
 
-The `AntiNex Core`_ manages pre-trained deep neural networks in memory. These can be used with the REST API by adding the ``"publish_to_core": true`` to a request while running with the `REST API compose.yml` docker containers running.
+The `AntiNex Core`_ manages pre-trained deep neural networks in memory. These can be used with the REST API by adding the ``"publish_to_core": true`` to a request while running with the `REST API compose.yml`_ docker containers running.
 
 Run:
 
