@@ -709,7 +709,7 @@ class AIClient:
         """
 
         not_done = True
-        retry_attempt = 0
+        retry_attempt = 1
         while not_done:
 
             if self.debug:
@@ -965,7 +965,7 @@ class AIClient:
         """
 
         not_done = True
-        retry_attempt = 0
+        retry_attempt = 1
         while not_done:
 
             if self.debug:
