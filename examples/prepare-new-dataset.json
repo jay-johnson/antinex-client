@@ -11,7 +11,9 @@
     "pipeline_files": {
         "attack_files": []
     },
-    "meta_data": {},
+    "meta_data": {
+        "apply_scaler": true
+    },
     "post_proc": {
         "drop_columns": [
             "src_file",
