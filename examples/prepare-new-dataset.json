@@ -12,7 +12,6 @@
         "attack_files": []
     },
     "meta_data": {
-        "apply_scaler": true
     },
     "post_proc": {
         "drop_columns": [
