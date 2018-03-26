@@ -52,15 +52,21 @@ class AIClient:
                 "API_EMAIL",
                 "email-not-set"),
             verbose=True,
+            ca_file=None,
+            cert_file=None,
+            key_file=None,
             debug=False):
         """__init__
 
-        :param name: log name
         :param user: username
         :param email: email address
         :param password: password for the user
         :param url: url running the django rest framework
         :param verbose: turn off setup_logging
+        :param ca_file: path to CA file
+        :param cert_file: path to cert
+        :param key_file: path to private key
+        :param debug: turn on debugging - this will print passwords to stdout
         """
 
         self.user = user
@@ -68,6 +74,16 @@ class AIClient:
         self.password = password
         self.url = url
         self.verbose = verbose
+        self.ca_file = ca_file
+        self.cert_file = cert_file
+        self.key_file = key_file
+        self.cert = None
+
+        if self.cert_file and self.key_file:
+            self.cert = (
+                self.cert_file,
+                self.key_file)
+
         self.debug = debug
 
         if self.debug:
@@ -92,14 +108,17 @@ class AIClient:
 
     def login(
             self):
+        """login"""
 
         auth_url = self.api_urls["login"]
 
         if self.verbose:
-            log.info(("log in user={} url={}")
+            log.info(("log in user={} url={} ca_file={} cert={}")
                      .format(
                         self.user,
-                        auth_url))
+                        auth_url,
+                        self.ca_file,
+                        self.cert))
 
         use_headers = {
             "Content-type": "application/json"
@@ -118,6 +137,8 @@ class AIClient:
 
         response = requests.post(
             auth_url,
+            verify=self.ca_file,
+            cert=self.cert,
             data=json.dumps(login_data),
             headers=use_headers)
 
@@ -164,6 +185,7 @@ class AIClient:
 
     def get_auth_header(
             self):
+        """get_auth_header"""
         headers = {
             "Content-type": "application/json",
             "Authorization": "JWT {}".format(self.get_token())
@@ -236,6 +258,110 @@ class AIClient:
                 retry))
     # end of retry_login
 
+    def get_prepare_by_id(
+            self,
+            prepare_id=None):
+        """get_prepare_by_id
+
+        :param prepare_id: MLJob.id in the database
+        """
+
+        if not prepare_id:
+            log.error("missing prepare_id for get_prepare_by_id")
+            return self.build_response(
+                status=ERROR,
+                error="missing prepare_id for get_prepare_by_id")
+
+        if self.verbose:
+            log.info(("user={} getting prepare={}")
+                     .format(
+                        self.user,
+                        prepare_id))
+
+        url = "{}{}".format(
+                self.api_urls["prepare"],
+                prepare_id)
+
+        not_done = True
+        while not_done:
+
+            if self.debug:
+                log.info(("JOB attempting to get={} to url={}")
+                         .format(
+                            prepare_id,
+                            url))
+
+            response = requests.get(
+                url,
+                verify=self.ca_file,
+                cert=self.cert,
+                headers=self.get_auth_header())
+
+            if self.debug:
+                log.info(("JOB response status_code={} text={} reason={}")
+                         .format(
+                            response.status_code,
+                            response.text,
+                            response.reason))
+
+            if response.status_code == 401:
+                login_res = self.retry_login()
+                if login_res["status"] != SUCCESS:
+                    if self.verbose:
+                        log.error(
+                            "retry login attempts failed")
+                    return self.build_response(
+                        status=login_res["status"],
+                        error=login_res["error"])
+                # if able to log back in just retry the call
+            elif response.status_code == 200:
+
+                if self.verbose:
+                    log.debug("deserializing")
+
+                prepare_data = json.loads(
+                    response.text)
+
+                prepare_id = prepare_data.get(
+                    "id",
+                    None)
+
+                if not prepare_id:
+                    return self.build_response(
+                        status=ERROR,
+                        error="missing prepare.id",
+                        data="text={} reason={}".format(
+                            response.reason,
+                            response.text))
+
+                self.all_prepares[str(prepare_id)] = prepare_data
+
+                if self.verbose:
+                    log.info(("added prepare={} all_prepares={} ")
+                             .format(
+                                prepare_id,
+                                len(self.all_prepares)))
+
+                return self.build_response(
+                    status=SUCCESS,
+                    error="",
+                    data=prepare_data)
+            else:
+                err_msg = ("failed with "
+                           "status_code={} text={} reason={}").format(
+                               response.status_code,
+                               response.text,
+                               response.reason)
+                if self.verbose:
+                    log.error(err_msg)
+                return self.build_response(
+                    status=ERROR,
+                    error=err_msg)
+                # if able to log back in just retry the call
+            # end of handling response status codes
+        # end of while not_done
+    # end of get_prepare_by_id
+
     def get_job_by_id(
             self,
             job_id=None):
@@ -271,6 +397,8 @@ class AIClient:
 
             response = requests.get(
                 url,
+                verify=self.ca_file,
+                cert=self.cert,
                 headers=self.get_auth_header())
 
             if self.debug:
@@ -373,6 +501,8 @@ class AIClient:
 
             response = requests.get(
                 url,
+                verify=self.ca_file,
+                cert=self.cert,
                 headers=self.get_auth_header())
 
             if self.debug:
@@ -468,6 +598,8 @@ class AIClient:
 
             response = requests.post(
                 url,
+                verify=self.ca_file,
+                cert=self.cert,
                 data=json.dumps(body),
                 headers=self.get_auth_header())
 
@@ -569,6 +701,12 @@ class AIClient:
             job_id,
             sec_to_sleep=0.1,
             max_retries=100000):
+        """wait_for_job_to_finish
+
+        :param job_id: MLJob.id to wait on
+        :param sec_to_sleep: seconds to sleep during polling
+        :param max_retries: max retires until stopping
+        """
 
         not_done = True
         sec_to_sleep = 0.1
@@ -682,8 +820,199 @@ class AIClient:
                     # if logging just to show this is running
                     time.sleep(sec_to_sleep)
         # end of while waiting for the job to finish
-
     # end of wait_for_job_to_finish
 
+    def run_prepare(
+            self,
+            body):
+        """run_prepare
+
+        :param body: dictionary to launch prepare
+        """
+
+        if self.verbose:
+            log.info(("user={} starting prepare={}")
+                     .format(
+                        self.user,
+                        str(body)[0:32]))
+
+        url = "{}".format(
+                self.api_urls["prepare"])
+
+        not_done = True
+        while not_done:
+
+            if self.debug:
+                log.info(("JOB attempting to post={} to url={}")
+                         .format(
+                            json.dumps(body),
+                            url))
+
+            response = requests.post(
+                url,
+                verify=self.ca_file,
+                cert=self.cert,
+                data=json.dumps(body),
+                headers=self.get_auth_header())
+
+            if self.debug:
+                log.info(("JOB response status_code={} text={} reason={}")
+                         .format(
+                            response.status_code,
+                            response.text,
+                            response.reason))
+
+            if response.status_code == 401:
+                login_res = self.retry_login()
+                if login_res["status"] != SUCCESS:
+                    if self.verbose:
+                        log.error(
+                            "retry login attempts failed")
+                    return self.build_response(
+                        status=login_res["status"],
+                        error=login_res["error"])
+                # if able to log back in just retry the call
+            elif response.status_code == 201:
+
+                if self.verbose:
+                    log.info(("deserializing={}")
+                             .format(
+                                response.text))
+
+                prepare_data = json.loads(
+                    response.text)
+
+                if not prepare_data:
+                    return self.build_response(
+                        status=ERROR,
+                        error="prepare failed",
+                        data="text={} reason={}".format(
+                            response.reason,
+                            response.text))
+
+                prepare_id = prepare_data.get(
+                    "id",
+                    None)
+
+                if not prepare_id:
+                    return self.build_response(
+                        status=ERROR,
+                        error="missing prepare.id",
+                        data="text={} reason={}".format(
+                            response.reason,
+                            response.text))
+
+                self.all_prepares[str(prepare_id)] = prepare_data
+
+                if self.verbose:
+                    log.info(("added prepare={} all_prepares={}")
+                             .format(
+                                prepare_id,
+                                len(self.all_prepares)))
+
+                return self.build_response(
+                    status=SUCCESS,
+                    error="",
+                    data=prepare_data)
+            else:
+                err_msg = ("failed with "
+                           "status_code={} text={} reason={}").format(
+                               response.status_code,
+                               response.text,
+                               response.reason)
+                if self.verbose:
+                    log.error(err_msg)
+                return self.build_response(
+                    status=ERROR,
+                    error=err_msg)
+                # if able to log back in just retry the call
+            # end of handling response status codes
+        # end of while not_done
+    # end of run_prepare
+
+    def wait_for_prepare_to_finish(
+            self,
+            prepare_id,
+            sec_to_sleep=0.1,
+            max_retries=100000):
+        """wait_for_prepare_to_finish
+
+        :param prepare_id: MLPrepare.id to wait on
+        :param sec_to_sleep: seconds to sleep during polling
+        :param max_retries: max retires until stopping
+        """
+
+        not_done = True
+        sec_to_sleep = 0.1
+        retry_attempt = 0
+        while not_done:
+
+            if self.verbose:
+                log.info(("PREPSTATUS getting prepare.id={} details")
+                         .format(
+                            prepare_id))
+
+            response = self.get_prepare_by_id(prepare_id)
+
+            if self.verbose:
+                log.info(("PREPSTATUS got prepare.id={} response={}")
+                         .format(
+                            prepare_id,
+                            response))
+
+            if response["status"] != SUCCESS:
+                log.error(("PREPSTATUS failed to get prepare.id={} "
+                           "with error={}")
+                          .format(
+                            prepare_id,
+                            response["error"]))
+                return self.build_response(
+                    status=ERROR,
+                    error=response["error"],
+                    data=response["data"])
+            # stop if this failed getting the prepare details
+
+            prepare_data = response.get(
+                "data",
+                None)
+
+            if not prepare_data:
+                return self.build_response(
+                    status=ERROR,
+                    error="failed to find prepare dictionary in response",
+                    data=response["data"])
+
+            prepare_status = prepare_data["status"]
+
+            if prepare_status == "finished" \
+               or prepare_status == "completed":
+
+                not_done = False
+                return self.build_response(
+                    status=SUCCESS,
+                    error="",
+                    data=prepare_data)
+            else:
+
+                retry_attempt += 1
+                if retry_attempt > max_retries:
+                    err_msg = ("failed waiting "
+                               "for prepare.id={} to finish").format(
+                                   prepare_id)
+                    log.error(err_msg)
+                    return self.build_response(
+                        status=ERROR,
+                        error=err_msg)
+                else:
+                    if self.verbose:
+                        if retry_attempt % 100 == 0:
+                            log.info(("waiting on prepare.id={} retry={}")
+                                     .format(
+                                        prepare_id,
+                                        retry_attempt))
+                    # if logging just to show this is running
+                    time.sleep(sec_to_sleep)
+        # end of while waiting for the prepare to finish
+    # end of wait_for_prepare_to_finish
 
 # end of AIClient

@@ -5,7 +5,6 @@ import os
 import sys
 import json
 import argparse
-import pandas as pd
 from antinex_client.log.setup_logging import build_colorized_logger
 from antinex_client.utils import ev
 from antinex_client.utils import ppj
@@ -21,8 +20,7 @@ log = build_colorized_logger(name=name)
 
 
 parser = argparse.ArgumentParser(
-        description=("Python client to Train a Deep Neural Network "
-                     "with AntiNex Django Rest Framework"))
+        description=("Python client to Prepare a dataset"))
 parser.add_argument(
         "-u",
         help="username",
@@ -47,7 +45,7 @@ parser.add_argument(
         "-f",
         help="file to use default ./examples/test-keras-dnn.json",
         required=False,
-        dest="datafile")
+        dest="prepare_file")
 parser.add_argument(
         "-s",
         help="silent",
@@ -75,9 +73,9 @@ email = ev(
 url = ev(
     "API_URL",
     "http://localhost:8080")
-datafile = ev(
+prepare_file = ev(
     "DATAFILE",
-    "datafile-not-set")
+    "prepare_file-not-set")
 verbose = bool(str(ev(
     "API_VERBOSE",
     "true")).lower() == "true")
@@ -93,8 +91,8 @@ if args.email:
     email = args.email
 if args.url:
     url = args.url
-if args.datafile:
-    datafile = args.datafile
+if args.prepare_file:
+    prepare_file = args.prepare_file
 if args.silent:
     verbose = False
 if args.debug:
@@ -102,7 +100,7 @@ if args.debug:
 
 usage = ("Please run with -u <username> "
          "-p <password> -e <email> "
-         "-a <AntiNex URL http://localhost:8080> -f <path to json file>")
+         "-a <AntiNex URL http://localhost:8080> -i <prepare_id>")
 
 valid = True
 if not user or user == "user-not-set":
@@ -111,14 +109,14 @@ if not user or user == "user-not-set":
 if not password or password == "password-not-set":
     log.error("missing password")
     valid = False
-if not datafile or datafile == "datafile-not-set":
-    log.error("missing datafile")
+if not prepare_file or prepare_file == "prepare_file-not-set":
+    log.error("missing prepare_file")
     valid = False
 else:
-    if not os.path.exists(datafile):
-        log.error(("did not find datafile={} on disk")
+    if not os.path.exists(prepare_file):
+        log.error(("did not find prepare_file={} on disk")
                   .format(
-                    datafile))
+                    prepare_file))
         valid = False
 if not valid:
     log.error(usage)
@@ -130,7 +128,7 @@ if verbose:
              .format(
                 user,
                 url,
-                datafile))
+                prepare_file))
 
 client = AIClient(
     user=user,
@@ -141,45 +139,45 @@ client = AIClient(
     debug=debug)
 
 if verbose:
-    log.info(("loading request in datafile={}")
+    log.info(("loading request in prepare_file={}")
              .format(
-                datafile))
+                prepare_file))
 
 req_body = None
-with open(datafile, "r") as f:
+with open(prepare_file, "r") as f:
     req_body = json.loads(f.read())
 
 if verbose:
-    log.info("running job")
+    log.info("running prepare")
 
-job_was_started = False
-response = client.run_job(
+prepare_was_started = False
+response = client.run_prepare(
     body=req_body)
 
 if response["status"] == SUCCESS:
-    log.info(("job started with response={}")
+    log.info(("prepare started with response={}")
              .format(
                 response["data"]))
-    job_was_started = True
+    prepare_was_started = True
 elif response["status"] == FAILED:
-    log.error(("job failed with error='{}' with response={}")
+    log.error(("prepare failed with error='{}' with response={}")
               .format(
                 response["error"],
                 response["data"]))
 elif response["status"] == ERROR:
-    log.error(("job had an error='{}' with response={}")
+    log.error(("prepare had an error='{}' with response={}")
               .format(
                 response["error"],
                 response["data"]))
 elif response["status"] == LOGIN_FAILED:
-    log.error(("job reported user was not able to log in "
+    log.error(("prepare reported user was not able to log in "
                "with an error='{}' with response={}")
               .format(
                 response["error"],
                 response["data"]))
 
 
-if not job_was_started:
+if not prepare_was_started:
     sys.exit(1)
 
 if debug:
@@ -190,76 +188,41 @@ else:
     if verbose:
         log.info("parsing data")
 
-res_data = response["data"]
+prepare_data = response["data"]
 
-job_data = res_data.get(
-    "job",
-    None)
-result_data = res_data.get(
-    "results",
-    None)
-
-if not job_data:
-    log.error(("missing job dictionary in response data={}")
-              .format(
-                response["data"]))
-    sys.exit(1)
-if not result_data:
-    log.error(("missing results dictionary in response data={}")
+if not prepare_data:
+    log.error(("missing prepare dictionary in response data={}")
               .format(
                 response["data"]))
     sys.exit(1)
 
-job_id = job_data.get("id", None)
-job_status = job_data.get("status", None)
-result_id = result_data.get("id", None)
-result_status = result_data.get("status", None)
+prepare_id = prepare_data.get("id", None)
+prepare_status = prepare_data.get("status", None)
 
-log.info(("started job.id={} job.status={} with result.id={} result.status={}")
+log.info(("started prepare.id={} prepare.status={}")
          .format(
-            job_id,
-            job_status,
-            result_id,
-            result_status))
+            prepare_id,
+            prepare_status))
 
-job_results = client.wait_for_job_to_finish(
-    job_id=job_id)
+prepare_results = client.wait_for_prepare_to_finish(
+    prepare_id=prepare_id)
 
-if job_results["status"] != SUCCESS:
-    log.error(("failed waiting for job.id={} to finish error={} data={}")
+if prepare_results["status"] != SUCCESS:
+    log.error(("failed waiting for prepare.id={} to finish error={} data={}")
               .format(
-                job_id,
-                job_results["error"],
-                job_results["data"]))
+                prepare_id,
+                prepare_results["error"],
+                prepare_results["data"]))
     sys.exit(1)
 
-final_job = job_results["data"]["job"]
-final_result = job_results["data"]["result"]
+final_prepare = prepare_results["data"]
 
-log.info(("job={}")
+log.info(("prepare={}")
          .format(
-            ppj(final_job)))
+            ppj(final_prepare)))
 
-log.info(("result={}")
+log.info(("prepare.id={} is done")
          .format(
-            ppj(final_result)))
-
-log.info(("job.id={} is done")
-         .format(
-            job_id))
-
-predictions = final_result["predictions_json"].get(
-    "predictions",
-    [])
-
-log.info(("loading predictions={} into pandas dataframe")
-         .format(
-            len(predictions)))
-
-df = pd.DataFrame(predictions)
-
-log.info(("dataframe={}")
-         .format(
-            df))
+            prepare_id))
 
 sys.exit(0)

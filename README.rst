@@ -48,6 +48,43 @@ Please wait as this will take a few minutes to return and convert the prediction
 
     [30200 rows x 72 columns]
 
+Prepare a Dataset
+-----------------
+
+::
+
+    ai-prepare-dataset.py -u root -p 123321 -f examples/prepare-new-dataset.json
+
+Get Job Record for a Deep Neural Network
+----------------------------------------
+
+Get a user's MLJob record by setting: ``-i <MLJob.id>``
+
+This include the model json or model description for the Keras DNN.
+
+::
+
+    ai-get-job.py -u root -p 123321 -i 4
+
+Get Predictions Results for a Deep Neural Network
+-------------------------------------------------
+
+Get a user's MLJobResult record by setting: ``-i <MLJobResult.id>``
+
+This includes predictions from the training or prediction job.
+
+::
+
+    ai-get-results.py -u root -p 123321 -i 4
+
+Get a Prepared Dataset
+----------------------
+
+Get a user's MLPrepare record by setting: ``-i <MLPrepare.id>``
+
+::
+
+    ai-get-prepared-dataset.py -u root -p 123321 -i 15
 
 Development
 -----------

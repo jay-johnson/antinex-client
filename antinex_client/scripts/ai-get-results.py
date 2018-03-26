@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 
 
-import os
 import sys
-import json
 import argparse
-import pandas as pd
 from antinex_client.log.setup_logging import build_colorized_logger
 from antinex_client.utils import ev
 from antinex_client.utils import ppj
@@ -21,8 +18,7 @@ log = build_colorized_logger(name=name)
 
 
 parser = argparse.ArgumentParser(
-        description=("Python client to Train a Deep Neural Network "
-                     "with AntiNex Django Rest Framework"))
+        description=("Python client get AI Results by ID"))
 parser.add_argument(
         "-u",
         help="username",
@@ -44,10 +40,10 @@ parser.add_argument(
         required=False,
         dest="url")
 parser.add_argument(
-        "-f",
-        help="file to use default ./examples/test-keras-dnn.json",
+        "-i",
+        help="User's MLJobResult.id to look up",
         required=False,
-        dest="datafile")
+        dest="result_id")
 parser.add_argument(
         "-s",
         help="silent",
@@ -75,9 +71,9 @@ email = ev(
 url = ev(
     "API_URL",
     "http://localhost:8080")
-datafile = ev(
-    "DATAFILE",
-    "datafile-not-set")
+result_id = ev(
+    "RESULT_ID",
+    "result_id-not-set")
 verbose = bool(str(ev(
     "API_VERBOSE",
     "true")).lower() == "true")
@@ -93,8 +89,8 @@ if args.email:
     email = args.email
 if args.url:
     url = args.url
-if args.datafile:
-    datafile = args.datafile
+if args.result_id:
+    result_id = args.result_id
 if args.silent:
     verbose = False
 if args.debug:
@@ -102,7 +98,7 @@ if args.debug:
 
 usage = ("Please run with -u <username> "
          "-p <password> -e <email> "
-         "-a <AntiNex URL http://localhost:8080> -f <path to json file>")
+         "-a <AntiNex URL http://localhost:8080> -i <result_id>")
 
 valid = True
 if not user or user == "user-not-set":
@@ -111,14 +107,14 @@ if not user or user == "user-not-set":
 if not password or password == "password-not-set":
     log.error("missing password")
     valid = False
-if not datafile or datafile == "datafile-not-set":
-    log.error("missing datafile")
+if not result_id or result_id == "result_id-not-set":
+    log.error("missing result_id")
     valid = False
 else:
-    if not os.path.exists(datafile):
-        log.error(("did not find datafile={} on disk")
-                  .format(
-                    datafile))
+    try:
+        result_id = int(result_id)
+    except Exception as e:
+        log.error("please use -i <result_id with an integer>")
         valid = False
 if not valid:
     log.error(usage)
@@ -126,11 +122,11 @@ if not valid:
 
 
 if verbose:
-    log.info(("creating client user={} url={} file={}")
+    log.info(("creating client user={} url={} result_id={}")
              .format(
                 user,
                 url,
-                datafile))
+                result_id))
 
 client = AIClient(
     user=user,
@@ -141,125 +137,57 @@ client = AIClient(
     debug=debug)
 
 if verbose:
-    log.info(("loading request in datafile={}")
+    log.info(("loading request in result_id={}")
              .format(
-                datafile))
+                result_id))
 
-req_body = None
-with open(datafile, "r") as f:
-    req_body = json.loads(f.read())
-
-if verbose:
-    log.info("running job")
-
-job_was_started = False
-response = client.run_job(
-    body=req_body)
+response = client.get_result_by_id(
+    result_id=result_id)
 
 if response["status"] == SUCCESS:
-    log.info(("job started with response={}")
-             .format(
-                response["data"]))
-    job_was_started = True
+    if debug:
+        log.info(("got a result response={}")
+                 .format(
+                    response["data"]))
 elif response["status"] == FAILED:
-    log.error(("job failed with error='{}' with response={}")
+    log.error(("result failed with error='{}' with response={}")
               .format(
                 response["error"],
                 response["data"]))
 elif response["status"] == ERROR:
-    log.error(("job had an error='{}' with response={}")
+    log.error(("result had an error='{}' with response={}")
               .format(
                 response["error"],
                 response["data"]))
 elif response["status"] == LOGIN_FAILED:
-    log.error(("job reported user was not able to log in "
+    log.error(("result reported user was not able to log in "
                "with an error='{}' with response={}")
               .format(
                 response["error"],
                 response["data"]))
 
-
-if not job_was_started:
-    sys.exit(1)
-
-if debug:
-    log.info(("parsing response data={}")
-             .format(
-                 response["data"]))
-else:
-    if verbose:
-        log.info("parsing data")
-
-res_data = response["data"]
-
-job_data = res_data.get(
-    "job",
-    None)
-result_data = res_data.get(
-    "results",
-    None)
-
-if not job_data:
-    log.error(("missing job dictionary in response data={}")
-              .format(
-                response["data"]))
-    sys.exit(1)
-if not result_data:
-    log.error(("missing results dictionary in response data={}")
-              .format(
-                response["data"]))
-    sys.exit(1)
-
-job_id = job_data.get("id", None)
-job_status = job_data.get("status", None)
+result_data = response["data"]
 result_id = result_data.get("id", None)
 result_status = result_data.get("status", None)
 
-log.info(("started job.id={} job.status={} with result.id={} result.status={}")
+if debug:
+    log.info(("result={}")
+             .format(
+                ppj(result_data)))
+    for k in result_data:
+        log.info(("result_data has key={}")
+                 .format(
+                    k))
+    # end of for all result data keys
+# if in debugp
+
+log.info(("accuracy={} num_results={}")
          .format(
-            job_id,
-            job_status,
-            result_id,
-            result_status))
+            result_data["acc_data"]["accuracy"],
+            len(result_data["predictions_json"]["predictions"])))
 
-job_results = client.wait_for_job_to_finish(
-    job_id=job_id)
-
-if job_results["status"] != SUCCESS:
-    log.error(("failed waiting for job.id={} to finish error={} data={}")
-              .format(
-                job_id,
-                job_results["error"],
-                job_results["data"]))
-    sys.exit(1)
-
-final_job = job_results["data"]["job"]
-final_result = job_results["data"]["result"]
-
-log.info(("job={}")
+log.info(("done getting result.id={}")
          .format(
-            ppj(final_job)))
-
-log.info(("result={}")
-         .format(
-            ppj(final_result)))
-
-log.info(("job.id={} is done")
-         .format(
-            job_id))
-
-predictions = final_result["predictions_json"].get(
-    "predictions",
-    [])
-
-log.info(("loading predictions={} into pandas dataframe")
-         .format(
-            len(predictions)))
-
-df = pd.DataFrame(predictions)
-
-log.info(("dataframe={}")
-         .format(
-            df))
+            result_id))
 
 sys.exit(0)
