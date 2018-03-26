@@ -63,7 +63,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "antinex_client"))
 setup(
     name="antinex-client",
     cmdclass={"test": PyTest},
-    version="1.0.2",
+    version="1.0.3",
     description=("AntiNex Python client"),
     long_description=("AntiNex Python client"),
     author="Jay Johnson",

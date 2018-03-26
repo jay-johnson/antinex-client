@@ -272,7 +272,7 @@ class AIClient:
                 status=ERROR,
                 error="missing prepare_id for get_prepare_by_id")
 
-        if self.verbose:
+        if self.debug:
             log.info(("user={} getting prepare={}")
                      .format(
                         self.user,
@@ -336,8 +336,8 @@ class AIClient:
 
                 self.all_prepares[str(prepare_id)] = prepare_data
 
-                if self.verbose:
-                    log.info(("added prepare={} all_prepares={} ")
+                if self.debug:
+                    log.info(("added prepare={} all_prepares={}")
                              .format(
                                 prepare_id,
                                 len(self.all_prepares)))
@@ -376,7 +376,7 @@ class AIClient:
                 status=ERROR,
                 error="missing job_id for get_job_by_id")
 
-        if self.verbose:
+        if self.debug:
             log.info(("user={} getting job={}")
                      .format(
                         self.user,
@@ -440,8 +440,8 @@ class AIClient:
 
                 self.all_jobs[str(job_id)] = job_data
 
-                if self.verbose:
-                    log.info(("added job={} all_jobs={} ")
+                if self.debug:
+                    log.info(("added job={} all_jobs={}")
                              .format(
                                 job_id,
                                 len(self.all_jobs)))
@@ -480,7 +480,7 @@ class AIClient:
                 status=ERROR,
                 error="missing result_id for get_result_by_id")
 
-        if self.verbose:
+        if self.debug:
             log.info(("user={} getting result={}")
                      .format(
                         self.user,
@@ -544,7 +544,7 @@ class AIClient:
 
                 self.all_results[str(result_id)] = result_data
 
-                if self.verbose:
+                if self.debug:
                     log.info(("added result={} all_results={} ")
                              .format(
                                 result_id,
@@ -699,7 +699,7 @@ class AIClient:
     def wait_for_job_to_finish(
             self,
             job_id,
-            sec_to_sleep=0.1,
+            sec_to_sleep=2.0,
             max_retries=100000):
         """wait_for_job_to_finish
 
@@ -709,18 +709,17 @@ class AIClient:
         """
 
         not_done = True
-        sec_to_sleep = 0.1
         retry_attempt = 0
         while not_done:
 
-            if self.verbose:
+            if self.debug:
                 log.info(("JOBSTATUS getting job.id={} details")
                          .format(
                             job_id))
 
             response = self.get_job_by_id(job_id)
 
-            if self.verbose:
+            if self.debug:
                 log.info(("JOBSTATUS got job.id={} response={}")
                          .format(
                             job_id,
@@ -753,21 +752,22 @@ class AIClient:
                or job_status == "completed" \
                or job_status == "launched":
 
-                log.info(("job.id={} is done with status={}")
-                         .format(
-                            job_id,
-                            job_status))
+                if self.debug:
+                    log.info(("job.id={} is done with status={}")
+                             .format(
+                                job_id,
+                                job_status))
 
                 result_id = job_data["predict_manifest"]["result_id"]
 
-                if self.verbose:
+                if self.debug:
                     log.info(("JOBRESULT getting result.id={} details")
                              .format(
                                 result_id))
 
                 response = self.get_result_by_id(result_id)
 
-                if self.verbose:
+                if self.debug:
                     log.info(("JOBRESULT got result.id={} response={}")
                              .format(
                                 result_id,
@@ -789,16 +789,38 @@ class AIClient:
                     "data",
                     None)
 
-                full_response = {
-                    "job": job_data,
-                    "result": result_data
-                }
+                if result_data["status"] == "finished":
+                    full_response = {
+                        "job": job_data,
+                        "result": result_data
+                    }
+                    not_done = False
+                    return self.build_response(
+                        status=SUCCESS,
+                        error="",
+                        data=full_response)
+                else:
+                    if retry_attempt % 100 == 0:
+                        if self.verbose:
+                            log.info(("result_id={} are not done retry={}")
+                                     .format(
+                                        result_id,
+                                        retry_attempt))
 
-                not_done = False
-                return self.build_response(
-                    status=SUCCESS,
-                    error="",
-                    data=full_response)
+                    retry_attempt += 1
+                    if retry_attempt > max_retries:
+                        err_msg = ("failed waiting "
+                                   "for job.id={} result.id={} "
+                                   "to finish").format(
+                                    job_id,
+                                    result_id)
+                        log.error(err_msg)
+                        return self.build_response(
+                            status=ERROR,
+                            error=err_msg)
+                    else:
+                        time.sleep(sec_to_sleep)
+                    # wait while results are written to the db
             else:
 
                 retry_attempt += 1
@@ -933,7 +955,7 @@ class AIClient:
     def wait_for_prepare_to_finish(
             self,
             prepare_id,
-            sec_to_sleep=0.1,
+            sec_to_sleep=2.0,
             max_retries=100000):
         """wait_for_prepare_to_finish
 
@@ -943,18 +965,17 @@ class AIClient:
         """
 
         not_done = True
-        sec_to_sleep = 0.1
         retry_attempt = 0
         while not_done:
 
-            if self.verbose:
+            if self.debug:
                 log.info(("PREPSTATUS getting prepare.id={} details")
                          .format(
                             prepare_id))
 
             response = self.get_prepare_by_id(prepare_id)
 
-            if self.verbose:
+            if self.debug:
                 log.info(("PREPSTATUS got prepare.id={} response={}")
                          .format(
                             prepare_id,
