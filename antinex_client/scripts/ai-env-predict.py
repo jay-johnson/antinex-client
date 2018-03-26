@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 
-import os
 import sys
 import json
 import argparse
@@ -9,45 +8,33 @@ import pandas as pd
 from antinex_client.log.setup_logging import build_colorized_logger
 from antinex_client.utils import ev
 from antinex_client.utils import ppj
-from antinex_client.ai_client import AIClient
 from antinex_client.consts import LOGIN_FAILED
 from antinex_client.consts import SUCCESS
 from antinex_client.consts import ERROR
 from antinex_client.consts import FAILED
+from antinex_client.build_ai_client_from_env import build_ai_client_from_env
+from antinex_client.generate_ai_request import generate_ai_request
 
 
-name = "ai-client"
+name = "ai-env-client"
 log = build_colorized_logger(name=name)
 
-
 parser = argparse.ArgumentParser(
-        description=("Python client to Train a Deep Neural Network "
+        description=("Python client to make Predictions "
+                     "using a Pre-trained Deep Neural Network "
                      "with AntiNex Django Rest Framework"))
 parser.add_argument(
-        "-u",
-        help="username",
-        required=False,
-        dest="user")
-parser.add_argument(
-        "-p",
-        help="user password",
-        required=False,
-        dest="password")
-parser.add_argument(
-        "-e",
-        help="user email",
-        required=False,
-        dest="email")
-parser.add_argument(
-        "-a",
-        help="url endpoint with default http://localhost:8080",
-        required=False,
-        dest="url")
-parser.add_argument(
         "-f",
-        help="file to use default ./examples/test-keras-dnn.json",
+        help=("file to use default ./examples/"
+              "predict-rows-scaler-full-django.json"),
         required=False,
         dest="datafile")
+parser.add_argument(
+        "-m",
+        help="send mock data",
+        required=False,
+        dest="use_fake_rows",
+        action="store_true")
 parser.add_argument(
         "-s",
         help="silent",
@@ -62,37 +49,20 @@ parser.add_argument(
         action="store_true")
 args = parser.parse_args()
 
-
-user = ev(
-    "API_USER",
-    "user-not-set")
-password = ev(
-    "API_PASSWORD",
-    "password-not-set")
-email = ev(
-    "API_EMAIL",
-    "email-not-set")
-url = ev(
-    "API_URL",
-    "http://localhost:8080")
 datafile = ev(
     "DATAFILE",
-    "datafile-not-set")
+    "./examples/predict-rows-scaler-full-django.json")
 verbose = bool(str(ev(
-    "API_VERBOSE",
-    "true")).lower() == "true")
+    "ANTINEX_CLIENT_VERBOSE",
+    "1")).lower() == "1")
 debug = bool(str(ev(
-    "API_DEBUG",
-    "false")).lower() == "true")
+    "ANTINEX_CLIENT_DEBUG",
+    "0")).lower() == "1")
 
-if args.user:
-    user = args.user
-if args.password:
-    password = args.password
-if args.email:
-    email = args.email
-if args.url:
-    url = args.url
+use_fake_rows = False
+
+if args.use_fake_rows:
+    use_fake_rows = True
 if args.datafile:
     datafile = args.datafile
 if args.silent:
@@ -100,54 +70,53 @@ if args.silent:
 if args.debug:
     debug = True
 
-usage = ("Please run with -u <username> "
-         "-p <password> -e <email> "
-         "-a <AntiNex URL http://localhost:8080> -f <path to json file>")
-
-valid = True
-if not user or user == "user-not-set":
-    log.error("missing user")
-    valid = False
-if not password or password == "password-not-set":
-    log.error("missing password")
-    valid = False
-if not datafile or datafile == "datafile-not-set":
-    log.error("missing datafile")
-    valid = False
-else:
-    if not os.path.exists(datafile):
-        log.error(("did not find datafile={} on disk")
-                  .format(
-                    datafile))
-        valid = False
-if not valid:
-    log.error(usage)
-    sys.exit(1)
-
-
 if verbose:
-    log.info(("creating client user={} url={} file={}")
-             .format(
-                user,
-                url,
-                datafile))
+    log.info("creating client")
 
-client = AIClient(
-    user=user,
-    email=email,
-    password=password,
-    url=url,
-    verbose=verbose,
-    debug=debug)
+client = build_ai_client_from_env()
 
 if verbose:
     log.info(("loading request in datafile={}")
              .format(
                 datafile))
 
-req_body = None
-with open(datafile, "r") as f:
-    req_body = json.loads(f.read())
+# pass in full or partial prediction record dictionaries
+# the generate_ai_request will fill in gaps with defaults
+fake_rows_for_predicting = [
+    {
+        "tcp_seq": 1
+    },
+    {
+        "tcp_seq": 2
+    },
+    {
+        "tcp_seq": 3
+    },
+    {
+        "tcp_seq": 4
+    }
+]
+
+res_gen = None
+if use_fake_rows:
+    res_gen = generate_ai_request(
+        predict_rows=fake_rows_for_predicting)
+else:
+    req_with_org_rows = None
+    with open(datafile, "r") as f:
+        req_with_org_rows = json.loads(f.read())
+
+    res_gen = generate_ai_request(
+        predict_rows=req_with_org_rows["predict_rows"])
+# end of sending mock data from this file or a file on disk
+
+if res_gen["status"] != SUCCESS:
+    log.error(("failed generate_ai_request with error={}")
+              .format(
+                res_gen["error"]))
+    sys.exit(1)
+
+req_body = res_gen["data"]
 
 if verbose:
     log.info("running job")

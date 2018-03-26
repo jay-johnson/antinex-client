@@ -7,10 +7,10 @@ from antinex_client.log.setup_logging import build_colorized_logger
 from antinex_client.utils import ev
 from antinex_client.utils import ppj
 from antinex_client.ai_client import AIClient
-from antinex_client.ai_client import LOGIN_FAILED
-from antinex_client.ai_client import SUCCESS
-from antinex_client.ai_client import ERROR
-from antinex_client.ai_client import FAILED
+from antinex_client.consts import LOGIN_FAILED
+from antinex_client.consts import SUCCESS
+from antinex_client.consts import ERROR
+from antinex_client.consts import FAILED
 
 
 name = "ai-client"
@@ -98,7 +98,7 @@ if args.debug:
 
 usage = ("Please run with -u <username> "
          "-p <password> -e <email> "
-         "-a <AntiNex URL http://localhost:8080> -f <path to json file>")
+         "-a <AntiNex URL http://localhost:8080> -i <prepare_id>")
 
 valid = True
 if not user or user == "user-not-set":

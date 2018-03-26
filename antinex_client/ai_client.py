@@ -4,6 +4,13 @@ import logging
 import time
 from antinex_client.log.setup_logging import build_colorized_logger
 from antinex_client.utils import ev
+from antinex_client.consts import LOGIN_SUCCESS
+from antinex_client.consts import LOGIN_NOT_ATTEMPTED
+from antinex_client.consts import LOGIN_FAILED
+from antinex_client.consts import SUCCESS
+from antinex_client.consts import FAILED
+from antinex_client.consts import ERROR
+from antinex_client.consts import NOT_SET
 
 
 name = "ai-client"
@@ -25,14 +32,6 @@ elif log_level_str == "error":
 log = build_colorized_logger(
     name=name,
     log_level=log_level)
-
-LOGIN_SUCCESS = 0
-LOGIN_NOT_ATTEMPTED = 1
-LOGIN_FAILED = 2
-SUCCESS = 0
-FAILED = 1
-ERROR = 2
-NOT_SET = 3
 
 
 class AIClient:
@@ -699,7 +698,7 @@ class AIClient:
     def wait_for_job_to_finish(
             self,
             job_id,
-            sec_to_sleep=2.0,
+            sec_to_sleep=10.0,
             max_retries=100000):
         """wait_for_job_to_finish
 
@@ -955,7 +954,7 @@ class AIClient:
     def wait_for_prepare_to_finish(
             self,
             prepare_id,
-            sec_to_sleep=2.0,
+            sec_to_sleep=10.0,
             max_retries=100000):
         """wait_for_prepare_to_finish
 

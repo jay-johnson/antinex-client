@@ -63,7 +63,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "antinex_client"))
 setup(
     name="antinex-client",
     cmdclass={"test": PyTest},
-    version="1.0.4",
+    version="1.0.5",
     description=("AntiNex Python client"),
     long_description=("AntiNex Python client"),
     author="Jay Johnson",
@@ -80,6 +80,7 @@ setup(
         "pytest"
     ],
     scripts=[
+        "./antinex_client/scripts/ai-env-predict.py",
         "./antinex_client/scripts/ai-get-prepared-dataset.py",
         "./antinex_client/scripts/ai-get-job.py",
         "./antinex_client/scripts/ai-get-results.py",

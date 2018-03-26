@@ -109,6 +109,26 @@ Get a user's MLPrepare record by setting: ``-i <MLPrepare.id>``
 
     ai-get-prepared-dataset.py -u root -p 123321 -i 15
 
+Using a Client Built from Environment Variables
+-----------------------------------------------
+
+This is how the `Network Pipeline`_ streams data to the `AntiNex Core`_ to make predictions with pre-trained models.
+
+Export the example environment file:
+
+::
+
+    source examples/example-prediction.env
+
+Run the client prediction stream script
+
+::
+
+    ai-env-predict.py -f examples/predict-rows-scaler-full-django.json
+
+.. _Network Pipeline: https://github.com/jay-johnson/network-pipeline
+.. _AntiNex Core: https://github.com/jay-johnson/antinex-core
+
 Development
 -----------
 ::
