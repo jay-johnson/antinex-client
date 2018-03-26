@@ -48,6 +48,29 @@ Please wait as this will take a few minutes to return and convert the prediction
 
     [30200 rows x 72 columns]
 
+Using Pre-trained Neural Networks to make Predictions
+-----------------------------------------------------
+
+The `AntiNex Core`_ manages pre-trained deep neural networks in memory. These can be used with the REST API by adding the ``"publish_to_core": true`` to a request while running with the `REST API compose.yml` docker containers running.
+
+Run:
+
+::
+
+    ai-train-dnn.py -u root -p 123321 -f examples/publish-to-core-scaler-full-django.json
+
+Here is the diff between requests that will run using a pre-trained model and one that will train a new neural network:
+
+::
+
+    antinex-client$ diff examples/publish-to-core-scaler-full-django.json examples/scaler-full-django-antinex-simple.json 
+    5d4
+    <     "publish_to_core": true,
+    antinex-client$
+
+.. _AntiNex Core: https://github.com/jay-johnson/antinex-core
+.. _REST API compose.yml: https://github.com/jay-johnson/train-ai-with-django-swagger-jwt/blob/master/compose.yml
+
 Prepare a Dataset
 -----------------
 
