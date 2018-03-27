@@ -154,19 +154,36 @@ elif response["status"] == FAILED:
               .format(
                 response["error"],
                 response["data"]))
+    sys.exit(1)
 elif response["status"] == ERROR:
-    log.error(("job had an error='{}' with response={}")
-              .format(
-                response["error"],
-                response["data"]))
+    if "missing " in response["error"]:
+        log.error(("Did not find a job with id={} for user={}")
+                  .format(
+                    job_id,
+                    user))
+    else:
+        log.error(("job had an error='{}' with response={}")
+                  .format(
+                    response["error"],
+                    response["data"]))
+    sys.exit(1)
 elif response["status"] == LOGIN_FAILED:
     log.error(("job reported user was not able to log in "
                "with an error='{}' with response={}")
               .format(
                 response["error"],
                 response["data"]))
+    sys.exit(1)
 
 job_data = response["data"]
+
+if len(job_data) == 0:
+    log.error(("Did not find a job with id={} for user={}")
+              .format(
+                job_id,
+                user))
+    sys.exit(1)
+
 job_id = job_data.get("id", None)
 job_status = job_data.get("status", None)
 

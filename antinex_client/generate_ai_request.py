@@ -169,6 +169,8 @@ def generate_ai_request(
             for col in r:
                 cur_value = r[col]
                 if col in filter_features_dict:
+                    if not cur_value:
+                        cur_value = value_for_missing
                     if ANTINEX_CONVERT_DATA:
                         try:
                             if convert_to_type == "float":
@@ -176,13 +178,14 @@ def generate_ai_request(
                             elif convert_to_type == "int":
                                 new_row[col] = int(cur_value)
                         except Exception as e:
-                            log.error(("failed converting {}={} to type={}")
-                                      .format(
-                                        col,
-                                        cur_value,
-                                        convert_to_type))
                             if include_failed_conversions:
                                 new_row[col] = cur_value
+                            else:
+                                log.error(("failed converting {}={} type={}")
+                                          .format(
+                                            col,
+                                            cur_value,
+                                            convert_to_type))
                         # if conversion failed
                     else:
                         new_row[col] = cur_value

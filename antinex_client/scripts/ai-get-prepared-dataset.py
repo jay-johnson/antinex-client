@@ -154,19 +154,36 @@ elif response["status"] == FAILED:
               .format(
                 response["error"],
                 response["data"]))
+    sys.exit(1)
 elif response["status"] == ERROR:
-    log.error(("prepare had an error='{}' with response={}")
-              .format(
-                response["error"],
-                response["data"]))
+    if "missing " in response["error"]:
+        log.error(("Did not find a prepare with id={} for user={}")
+                  .format(
+                    prepare_id,
+                    user))
+    else:
+        log.error(("prepare had an error='{}' with response={}")
+                  .format(
+                    response["error"],
+                    response["data"]))
+    sys.exit(1)
 elif response["status"] == LOGIN_FAILED:
     log.error(("prepare reported user was not able to log in "
                "with an error='{}' with response={}")
               .format(
                 response["error"],
                 response["data"]))
+    sys.exit(1)
 
 prepare_data = response["data"]
+
+if len(prepare_data) == 0:
+    log.error(("Did not find a prepare with id={} for user={}")
+              .format(
+                prepare_id,
+                user))
+    sys.exit(1)
+
 prepare_id = prepare_data.get("id", None)
 prepare_status = prepare_data.get("status", None)
 

@@ -154,19 +154,36 @@ elif response["status"] == FAILED:
               .format(
                 response["error"],
                 response["data"]))
+    sys.exit(1)
 elif response["status"] == ERROR:
-    log.error(("result had an error='{}' with response={}")
-              .format(
-                response["error"],
-                response["data"]))
+    if "missing " in response["error"]:
+        log.error(("Did not find a result with id={} for user={}")
+                  .format(
+                    result_id,
+                    user))
+    else:
+        log.error(("result had an error='{}' with response={}")
+                  .format(
+                    response["error"],
+                    response["data"]))
+    sys.exit(1)
 elif response["status"] == LOGIN_FAILED:
     log.error(("result reported user was not able to log in "
                "with an error='{}' with response={}")
               .format(
                 response["error"],
                 response["data"]))
+    sys.exit(1)
 
 result_data = response["data"]
+
+if len(result_data) == 0:
+    log.error(("Did not find a result with id={} for user={}")
+              .format(
+                result_id,
+                user))
+    sys.exit(1)
+
 result_id = result_data.get("id", None)
 result_status = result_data.get("status", None)
 
@@ -181,10 +198,15 @@ if debug:
     # end of for all result data keys
 # if in debugp
 
-log.info(("accuracy={} num_results={}")
-         .format(
-            result_data["acc_data"]["accuracy"],
-            len(result_data["predictions_json"]["predictions"])))
+if result_data["status"] == "finished":
+    log.info(("accuracy={} num_results={}")
+             .format(
+                result_data["acc_data"]["accuracy"],
+                len(result_data["predictions_json"]["predictions"])))
+else:
+    log.info(("job is not done latest results={}")
+             .format(
+                ppj(result_data)))
 
 log.info(("done getting result.id={}")
          .format(

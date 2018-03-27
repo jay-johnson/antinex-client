@@ -16,7 +16,9 @@ name = "build-ai-client-from-env"
 log = build_colorized_logger(name=name)
 
 
-def build_ai_client_from_env():
+def build_ai_client_from_env(
+        verbose=ANTINEX_CLIENT_VERBOSE,
+        debug=ANTINEX_CLIENT_DEBUG):
     """build_ai_client_from_env
        Use environment variables to build a client
     """
@@ -47,9 +49,9 @@ def build_ai_client_from_env():
         email=ANTINEX_EMAIL,
         password=ANTINEX_PASSWORD,
         url=ANTINEX_URL,
-        verbose=ANTINEX_CLIENT_VERBOSE,
         ca_file=ANTINEX_CA_FILE,
         cert_file=ANTINEX_CERT_FILE,
         key_file=ANTINEX_KEY_FILE,
-        debug=ANTINEX_CLIENT_DEBUG)
+        verbose=verbose,
+        debug=debug)
 # end of build_ai_client_from_env

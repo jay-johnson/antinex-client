@@ -698,7 +698,7 @@ class AIClient:
     def wait_for_job_to_finish(
             self,
             job_id,
-            sec_to_sleep=10.0,
+            sec_to_sleep=5.0,
             max_retries=100000):
         """wait_for_job_to_finish
 
@@ -954,7 +954,7 @@ class AIClient:
     def wait_for_prepare_to_finish(
             self,
             prepare_id,
-            sec_to_sleep=10.0,
+            sec_to_sleep=5.0,
             max_retries=100000):
         """wait_for_prepare_to_finish
 
