@@ -7,7 +7,7 @@ https://github.com/jay-johnson/train-ai-with-django-swagger-jwt
 
 .. image:: https://travis-ci.org/jay-johnson/antinex-client.svg?branch=master
     :target: https://travis-ci.org/jay-johnson/antinex-client
-.. image:: http://antinex-client.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/antinex-client/badge/?version=latest
     :target: http://antinex-client.readthedocs.io/en/latest/?badge=latest
 
 Install
