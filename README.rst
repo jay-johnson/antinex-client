@@ -1,6 +1,9 @@
 AntiNex Python Client
 =====================
 
+.. image:: https://travis-ci.org/jay-johnson/antinex-client.svg?branch=master
+    :target: https://travis-ci.org/jay-johnson/antinex-client
+
 Python API Client for training deep neural networks with the REST API running:
 
 https://github.com/jay-johnson/train-ai-with-django-swagger-jwt
