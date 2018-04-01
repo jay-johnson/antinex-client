@@ -1,5 +1,5 @@
-Building a Client from Environment Variables
-============================================
+AntiNex Consts
+==============
 
 Here are the environment variables and constants used by the AntiNex client.
 
@@ -14,8 +14,8 @@ Here are the environment variables and constants used by the AntiNex client.
     NOT_SET = 3
     DISABLED = 4
 
-AntiNex Client Environment Variables
-------------------------------------
+Client Environment Variables
+============================
 
 These are the environment variables used by the AntiNex client.
 
