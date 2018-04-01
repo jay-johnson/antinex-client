@@ -3,12 +3,12 @@ AntiNex Python Client
 
 Python API Client for training deep neural networks with the REST API running
 
+https://github.com/jay-johnson/train-ai-with-django-swagger-jwt
+
 .. image:: https://travis-ci.org/jay-johnson/antinex-client.svg?branch=master
     :target: https://travis-ci.org/jay-johnson/antinex-client
 .. image:: http://antinex-client.readthedocs.io/en/latest/?badge=latest
     :target: http://antinex-client.readthedocs.io/en/latest/?badge=latest
-
-https://github.com/jay-johnson/train-ai-with-django-swagger-jwt
 
 Install
 -------
