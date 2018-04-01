@@ -47,7 +47,6 @@ install_requires = [
     "sphinx",
     "sphinx-autobuild",
     "sphinx_rtd_theme",
-    "tables",
     "tox",
     "tqdm",
     "unittest2",
