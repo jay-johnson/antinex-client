@@ -106,7 +106,8 @@ def prepare_new_dataset():
 
     usage = ("Please run with -u <username> "
              "-p <password> -e <email> "
-             "-a <AntiNex URL http://localhost:8080> -f <path to prepare file>")
+             "-a <AntiNex URL http://localhost:8080> "
+             "-f <path to prepare file>")
 
     valid = True
     if not user or user == "user-not-set":
