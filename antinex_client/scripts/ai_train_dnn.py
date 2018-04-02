@@ -268,7 +268,7 @@ def train_new_deep_neural_network():
              .format(
                 df))
 
-# end of prepare_new_dataset
+# end of train_new_deep_neural_network
 
 
 if __name__ == "__main__":

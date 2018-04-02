@@ -1,7 +1,7 @@
-Train a Deep Neural Network and Make Predictions
-================================================
+Make Predictions with a Pre-trained Deep Neural Network
+=======================================================
 
-This uses environment variables to build, train and make predictions using the AntiNex client.
+This uses environment variables to build, train and make predictions using the AntiNex client. If the deep neural network already exists it will use it to make new predictions. If it does not exist it will train a new one.
 
 This python script is available in the pip: ``ai_env_predict.py``
 
