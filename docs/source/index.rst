@@ -62,6 +62,8 @@ AntiNex client is part of the AntiNex stack:
 Table of Contents
 -----------------
 
+These are the docs for the AntiNex client repository.
+
 .. toctree::
    :maxdepth: 2
    
