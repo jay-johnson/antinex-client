@@ -36,6 +36,15 @@ log = build_colorized_logger(
 
 class AIClient:
 
+    """
+
+    AntiNex Python AI Client
+
+    This can use either environment variables or keyword arguments
+    to create a valid client.
+
+    """
+
     def __init__(
             self,
             user=ev(
