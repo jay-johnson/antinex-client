@@ -66,7 +66,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "antinex_client"))
 setup(
     name="antinex-client",
     cmdclass={"test": PyTest},
-    version="1.0.8",
+    version="1.0.9",
     description=("AntiNex Python client"),
     long_description=("AntiNex Python client"),
     author="Jay Johnson",
@@ -74,6 +74,7 @@ setup(
     url="https://github.com/jay-johnson/antinex-client",
     packages=[
         "antinex_client",
+        "antinex_client.scripts",
         "antinex_client.log"
     ],
     package_data={},
@@ -83,12 +84,12 @@ setup(
         "pytest"
     ],
     scripts=[
-        "./antinex_client/scripts/ai-env-predict.py",
-        "./antinex_client/scripts/ai-get-prepared-dataset.py",
-        "./antinex_client/scripts/ai-get-job.py",
-        "./antinex_client/scripts/ai-get-results.py",
-        "./antinex_client/scripts/ai-prepare-dataset.py",
-        "./antinex_client/scripts/ai-train-dnn.py"
+        "./antinex_client/scripts/ai_env_predict.py",
+        "./antinex_client/scripts/ai_get_prepared_dataset.py",
+        "./antinex_client/scripts/ai_get_job.py",
+        "./antinex_client/scripts/ai_get_results.py",
+        "./antinex_client/scripts/ai_prepare_dataset.py",
+        "./antinex_client/scripts/ai_train_dnn.py"
     ],
     use_2to3=True,
     classifiers=[

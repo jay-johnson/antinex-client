@@ -3,7 +3,7 @@ Train a Deep Neural Network and Make Predictions
 
 This uses environment variables to build, train and make predictions using the AntiNex client.
 
-This python script is available in the pip: **ai-env-predict.py**
+This python script is available in the pip: ``ai_env_predict.py``
 
 It takes parameters:
 
@@ -37,7 +37,9 @@ It takes parameters:
         required=False,
         dest="debug",
         action="store_true")
-    args = parser.parse_args()
 
-.. automodule:: antinex_client.scripts.ai-env-predict
-    :members: parser,res_gen,client,predictions,df
+Source Code
+-----------
+
+.. automodule:: antinex_client.scripts.ai_env_predict
+    :members: start_predictions

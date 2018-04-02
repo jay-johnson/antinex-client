@@ -28,43 +28,43 @@ AntiNex client is part of the AntiNex stack:
      - Build
      - Docs Link
      - Docs Build
-   * - `REST API <https://github.com/jay-johnson/train-ai-with-django-swagger-jwt>`_
+   * - `REST API <https://github.com/jay-johnson/train-ai-with-django-swagger-jwt>`__
      - .. image:: https://travis-ci.org/jay-johnson/train-ai-with-django-swagger-jwt.svg?branch=master
            :alt: Travis Tests
            :target: https://travis-ci.org/jay-johnson/train-ai-with-django-swagger-jwt.svg
-     - `Docs <http://antinex.readthedocs.io/en/latest/>`_
+     - `Docs <http://antinex.readthedocs.io/en/latest/>`__
      - .. image:: https://readthedocs.org/projects/antinex/badge/?version=latest
            :alt: Read the Docs REST API Tests
            :target: https://readthedocs.org/projects/antinex/badge/?version=latest
-   * - `Core Worker <https://github.com/jay-johnson/antinex-core>`_
+   * - `Core Worker <https://github.com/jay-johnson/antinex-core>`__
      - .. image:: https://travis-ci.org/jay-johnson/antinex-core.svg?branch=master
            :alt: Travis AntiNex Core Tests
            :target: https://travis-ci.org/jay-johnson/antinex-core.svg
-     - `Docs <http://antinex-core-worker.readthedocs.io/en/latest/>`_
+     - `Docs <http://antinex-core-worker.readthedocs.io/en/latest/>`__
      - .. image:: https://readthedocs.org/projects/antinex-core-worker/badge/?version=latest
            :alt: Read the Docs AntiNex Core Tests
            :target: http://antinex-core-worker.readthedocs.io/en/latest/?badge=latest
-   * - `Network Pipeline <https://github.com/jay-johnson/network-pipeline>`_
+   * - `Network Pipeline <https://github.com/jay-johnson/network-pipeline>`__
      - .. image:: https://travis-ci.org/jay-johnson/network-pipeline.svg?branch=master
            :alt: Travis AntiNex Network Pipeline Tests
            :target: https://travis-ci.org/jay-johnson/network-pipeline.svg
-     - `Docs <http://antinex-network-pipeline.readthedocs.io/en/latest/>`_
+     - `Docs <http://antinex-network-pipeline.readthedocs.io/en/latest/>`__
      - .. image:: https://readthedocs.org/projects/antinex-network-pipeline/badge/?version=latest
            :alt: Read the Docs AntiNex Network Pipeline Tests
            :target: https://readthedocs.org/projects/antinex-network-pipeline/badge/?version=latest
-   * - `AI Utils <https://github.com/jay-johnson/antinex-utils>`_
+   * - `AI Utils <https://github.com/jay-johnson/antinex-utils>`__
      - .. image:: https://travis-ci.org/jay-johnson/antinex-utils.svg?branch=master
            :alt: Travis AntiNex AI Utils Tests
            :target: https://travis-ci.org/jay-johnson/antinex-utils.svg
-     - `Docs <http://antinex-ai-utilities.readthedocs.io/en/latest/>`_
+     - `Docs <http://antinex-ai-utilities.readthedocs.io/en/latest/>`__
      - .. image:: https://readthedocs.org/projects/antinex-ai-utilities/badge/?version=latest
            :alt: Read the Docs AntiNex AI Utils Tests
            :target: http://antinex-ai-utilities.readthedocs.io/en/latest/?badge=latest
-   * - `Client <https://github.com/jay-johnson/antinex-client>`_
+   * - `Client <https://github.com/jay-johnson/antinex-client>`__
      - .. image:: https://travis-ci.org/jay-johnson/antinex-client.svg?branch=master
            :alt: Travis AntiNex Client Tests
            :target: https://travis-ci.org/jay-johnson/antinex-client.svg
-     - `Docs <http://antinex-client.readthedocs.io/en/latest/>`_
+     - `Docs <http://antinex-client.readthedocs.io/en/latest/>`__
      - .. image:: https://readthedocs.org/projects/antinex-client/badge/?version=latest
            :alt: Read the Docs AntiNex Client Tests
            :target: https://readthedocs.org/projects/antinex-client/badge/?version=latest
@@ -79,7 +79,7 @@ Train a Deep Neural Network with a JSON List of Records
 
 ::
 
-    ai-train-dnn.py -u root -p 123321 -f examples/predict-rows-scaler-django-simple.json
+    ai_train_dnn.py -u root -p 123321 -f examples/predict-rows-scaler-django-simple.json
 
 Train a Deep Neural Network to Predict Attacks with the AntiNex Datasets
 ------------------------------------------------------------------------
@@ -101,7 +101,7 @@ Please wait as this will take a few minutes to return and convert the prediction
 
 ::
 
-    ai-train-dnn.py -u root -p 123321 -f examples/scaler-full-django-antinex-simple.json 
+    ai_train_dnn.py -u root -p 123321 -f examples/scaler-full-django-antinex-simple.json 
 
     ...
 
@@ -116,7 +116,7 @@ Run:
 
 ::
 
-    ai-train-dnn.py -u root -p 123321 -f examples/publish-to-core-scaler-full-django.json
+    ai_train_dnn.py -u root -p 123321 -f examples/publish-to-core-scaler-full-django.json
 
 Here is the diff between requests that will run using a pre-trained model and one that will train a new neural network:
 
@@ -135,7 +135,7 @@ Prepare a Dataset
 
 ::
 
-    ai-prepare-dataset.py -u root -p 123321 -f examples/prepare-new-dataset.json
+    ai_prepare_dataset.py -u root -p 123321 -f examples/prepare-new-dataset.json
 
 Get Job Record for a Deep Neural Network
 ----------------------------------------
@@ -146,7 +146,7 @@ This include the model json or model description for the Keras DNN.
 
 ::
 
-    ai-get-job.py -u root -p 123321 -i 4
+    ai_get_job.py -u root -p 123321 -i 4
 
 Get Predictions Results for a Deep Neural Network
 -------------------------------------------------
@@ -157,7 +157,7 @@ This includes predictions from the training or prediction job.
 
 ::
 
-    ai-get-results.py -u root -p 123321 -i 4
+    ai_get_results.py -u root -p 123321 -i 4
 
 Get a Prepared Dataset
 ----------------------
@@ -166,7 +166,7 @@ Get a user's MLPrepare record by setting: ``-i <MLPrepare.id>``
 
 ::
 
-    ai-get-prepared-dataset.py -u root -p 123321 -i 15
+    ai_get_prepared_dataset.py -u root -p 123321 -i 15
 
 Using a Client Built from Environment Variables
 -----------------------------------------------
@@ -183,7 +183,7 @@ Run the client prediction stream script
 
 ::
 
-    ai-env-predict.py -f examples/predict-rows-scaler-full-django.json
+    ai_env_predict.py -f examples/predict-rows-scaler-full-django.json
 
 .. _Network Pipeline: https://github.com/jay-johnson/network-pipeline
 .. _AntiNex Core: https://github.com/jay-johnson/antinex-core
