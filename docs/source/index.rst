@@ -7,7 +7,7 @@ AntiNex Client Docs
 ===================
 
 AntiNex Stack Status
----------------------
+--------------------
 
 AntiNex client is part of the AntiNex stack:
 
@@ -58,6 +58,9 @@ AntiNex client is part of the AntiNex stack:
      - .. image:: https://readthedocs.org/projects/antinex-client/badge/?version=latest
            :alt: Read the Docs AntiNex Client Tests
            :target: https://readthedocs.org/projects/antinex-client/badge/?version=latest
+
+Table of Contents
+-----------------
 
 .. toctree::
    :maxdepth: 2

@@ -17,7 +17,7 @@ Install
 pip install antinex-client
 
 AntiNex Stack Status
----------------------
+--------------------
 
 AntiNex client is part of the AntiNex stack:
 
