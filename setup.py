@@ -32,7 +32,7 @@ os.chdir(os.path.abspath(cur_path))
 install_requires = [
     "colorlog",
     "coverage",
-    "flake8>=3.4.1",
+    "flake8",
     "matplotlib",
     "numpy",
     "pandas",
@@ -66,7 +66,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "antinex_client"))
 setup(
     name="antinex-client",
     cmdclass={"test": PyTest},
-    version="1.0.12",
+    version="1.0.13",
     description=("AntiNex Python client"),
     long_description=("AntiNex Python client"),
     author="Jay Johnson",
