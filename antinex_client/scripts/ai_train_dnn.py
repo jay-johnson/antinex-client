@@ -242,13 +242,23 @@ def train_new_deep_neural_network():
     final_job = job_results["data"]["job"]
     final_result = job_results["data"]["result"]
 
-    log.info(("job={}")
-             .format(
-                ppj(final_job)))
+    if verbose:
+        log.info(("job={}")
+                 .format(
+                    ppj(final_job)))
+    else:
+        log.info(("job={}")
+                 .format(
+                    str(final_job)[0:10]))
 
-    log.info(("result={}")
-             .format(
-                ppj(final_result)))
+    if verbose:
+        log.info(("result={}")
+                 .format(
+                    ppj(final_result)))
+    else:
+        log.info(("result={}")
+                 .format(
+                    str(final_result)[0:10]))
 
     log.info(("job.id={} is done")
              .format(
@@ -264,9 +274,10 @@ def train_new_deep_neural_network():
 
     df = pd.DataFrame(predictions)
 
-    log.info(("dataframe={}")
-             .format(
-                df))
+    if verbose:
+        log.info(("dataframe={}")
+                 .format(
+                    df))
 
 # end of train_new_deep_neural_network
 
