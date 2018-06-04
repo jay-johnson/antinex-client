@@ -79,7 +79,7 @@ Train a Deep Neural Network with a JSON List of Records
 
 ::
 
-    ai_train_dnn.py -u root -p 123321 -f examples/predict-rows-scaler-django-simple.json
+    ai -u root -p 123321 -f examples/predict-rows-scaler-django-simple.json
 
 Train a Deep Neural Network to Predict Attacks with the AntiNex Datasets
 ------------------------------------------------------------------------
@@ -101,7 +101,7 @@ Please wait as this will take a few minutes to return and convert the prediction
 
 ::
 
-    ai_train_dnn.py -u root -p 123321 -f examples/scaler-full-django-antinex-simple.json 
+    ai -u root -p 123321 -f examples/scaler-full-django-antinex-simple.json 
 
     ...
 
@@ -116,7 +116,7 @@ Run:
 
 ::
 
-    ai_train_dnn.py -u root -p 123321 -f examples/publish-to-core-scaler-full-django.json
+    ai -u root -p 123321 -f examples/publish-to-core-scaler-full-django.json
 
 Here is the diff between requests that will run using a pre-trained model and one that will train a new neural network:
 
