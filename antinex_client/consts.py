@@ -48,7 +48,7 @@ ANTINEX_PASSWORD = ev(
 # noqa https://github.com/jay-johnson/antinex-client/blob/master/examples/predict-rows-scaler-full-django.json
 ANTINEX_PUBLISH_REQUEST_FILE = ev(
     "ANTINEX_PUBLISH_REQUEST_FILE",
-    ("/opt/antinex-client/examples/"
+    ("/opt/antinex/client/examples/"
      "predict-rows-scaler-full-django.json"))
 # comma-separated list
 ANTINEX_FEATURES_TO_PROCESS_STR = os.getenv(
