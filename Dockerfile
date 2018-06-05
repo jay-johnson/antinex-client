@@ -6,19 +6,18 @@ RUN echo "creating project directories" \
   && chmod 777 //var/log/antinex/client \
   && touch /var/log/antinex/client/client.log \
   && chmod 777 /var/log/antinex/client/client.log \
-  && echo "updating repos" \
-  && cd /opt/antinex/antinex-client \
+  && echo "updating repo" \
+  && cd /opt/antinex/client \
   && git checkout master
   && git pull
   && "checking repos in container" \
   && ls -l /opt/antinex/client \
-  && echo "installing utils" \
+  && echo "activating venv" \
   && . /opt/venv/bin/activate \
   && cd /opt/antinex/client \
   && echo "installing pip upgrades" \
   && pip install --upgrade -e . \
   && echo "building docs" \
-  && . /opt/venv/bin/activate \
   && cd /opt/antinex/client/docs \
   && ls -l \
   && make html

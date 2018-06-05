@@ -34,7 +34,7 @@ after_success:
   - echo "Logging into Docker Hub"
   - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - echo "starting: cd docker && docker build -f Dockerfile -t ${REPO} ."
+  - echo "starting: docker build -f Dockerfile -t ${REPO} ."
   - docker build -f Dockerfile -t $REPO .
   - echo "docker tag ${REPO} ${REPO}:${USE_VERSION}"
   - docker tag $REPO $REPO:$USE_VERSION
