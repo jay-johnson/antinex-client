@@ -10,7 +10,7 @@ RUN echo "creating project directories" \
   && cd /opt/antinex/client \
   && git checkout master \
   && git pull \
-  && echo "checking repos in container" \
+  && echo "checking repo in container" \
   && ls -l /opt/antinex/client \
   && echo "activating venv" \
   && . /opt/venv/bin/activate \
