@@ -2,7 +2,7 @@ import json
 import requests
 import logging
 import time
-from antinex_client.log.setup_logging import build_colorized_logger
+from spylunking.log.setup_logging import build_colorized_logger
 from antinex_client.utils import ev
 from antinex_client.consts import LOGIN_SUCCESS
 from antinex_client.consts import LOGIN_NOT_ATTEMPTED

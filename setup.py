@@ -46,6 +46,7 @@ install_requires = [
     "sphinx",
     "sphinx-autobuild",
     "sphinx_rtd_theme",
+    "spylunking",
     "tox",
     "tqdm",
     "unittest2",
@@ -65,7 +66,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "antinex_client"))
 setup(
     name="antinex-client",
     cmdclass={"test": PyTest},
-    version="1.0.23",
+    version="1.0.24",
     description=("AntiNex Python client"),
     long_description=("AntiNex Python client"),
     author="Jay Johnson",

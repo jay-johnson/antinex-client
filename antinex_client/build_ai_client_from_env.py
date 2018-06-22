@@ -1,4 +1,4 @@
-from antinex_client.log.setup_logging import build_colorized_logger
+from spylunking.log.setup_logging import build_colorized_logger
 from antinex_client.ai_client import AIClient
 from antinex_client.consts import ANTINEX_PUBLISH_ENABLED
 from antinex_client.consts import ANTINEX_URL

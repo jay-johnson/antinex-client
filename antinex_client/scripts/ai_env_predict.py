@@ -5,7 +5,7 @@ import sys
 import json
 import argparse
 import pandas as pd
-from antinex_client.log.setup_logging import build_colorized_logger
+from spylunking.log.setup_logging import build_colorized_logger
 from antinex_client.utils import ev
 from antinex_client.utils import ppj
 from antinex_client.consts import LOGIN_FAILED

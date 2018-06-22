@@ -1,7 +1,7 @@
 import os
 import json
 import copy
-from antinex_client.log.setup_logging import build_colorized_logger
+from spylunking.log.setup_logging import build_colorized_logger
 from antinex_client.utils import ppj
 from antinex_client.consts import FAILED
 from antinex_client.consts import SUCCESS
