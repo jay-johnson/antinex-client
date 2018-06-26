@@ -29,7 +29,7 @@ elif log_level_str == "error":
     log_level = logging.ERROR
 
 log = console_logger(
-    name=__name__,
+    name='ai_client',
     log_level=log_level)
 
 

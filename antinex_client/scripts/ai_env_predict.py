@@ -17,7 +17,7 @@ from antinex_client.generate_ai_request import generate_ai_request
 
 
 log = console_logger(
-    name='antinex_client.scripts.ai_env_predict')
+    name='env_predict')
 
 
 def start_predictions():

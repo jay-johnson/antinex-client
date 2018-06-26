@@ -16,7 +16,7 @@ from antinex_client.consts import FAILED
 
 
 log = console_logger(
-    name='antinex_client.scripts.ai_prepare_dataset')
+    name='prepare_dataset')
 
 
 def prepare_new_dataset():

@@ -14,7 +14,7 @@ from antinex_client.consts import FAILED
 
 
 log = console_logger(
-    name='antinex_client.scripts.ai_get_prepared_dataset')
+    name='get_prepared_dataset')
 
 
 def get_prepared_dataset():

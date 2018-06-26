@@ -38,7 +38,7 @@ from antinex_client.consts import ANTINEX_CLIENT_DEBUG
 
 
 log = console_logger(
-    name=__name__)
+    name='gen_ai_req')
 
 
 def generate_ai_request(

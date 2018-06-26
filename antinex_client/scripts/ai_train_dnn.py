@@ -17,7 +17,7 @@ from antinex_client.consts import FAILED
 
 
 log = console_logger(
-    name='antinex_client.scripts.ai_train_dnn')
+    name='ai_train')
 
 
 def train_new_deep_neural_network():

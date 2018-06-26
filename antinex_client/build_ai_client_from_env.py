@@ -13,7 +13,7 @@ from antinex_client.consts import ANTINEX_CLIENT_DEBUG
 
 
 log = console_logger(
-    name=__name__)
+    name='build_ai_client_from_env')
 
 
 def build_ai_client_from_env(

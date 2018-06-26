@@ -14,7 +14,7 @@ from antinex_client.consts import FAILED
 
 
 log = console_logger(
-    name='antinex_client.scripts.ai_get_results')
+    name='get_results')
 
 
 def get_ml_job_results():
