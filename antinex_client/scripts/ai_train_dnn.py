@@ -6,7 +6,7 @@ import sys
 import json
 import argparse
 import pandas as pd
-from spylunking.log.setup_logging import build_colorized_logger
+from spylunking.log.setup_logging import console_logger
 from antinex_client.utils import ev
 from antinex_client.utils import ppj
 from antinex_client.ai_client import AIClient
@@ -16,8 +16,8 @@ from antinex_client.consts import ERROR
 from antinex_client.consts import FAILED
 
 
-name = "ai-client"
-log = build_colorized_logger(name=name)
+log = console_logger(
+    name='antinex_client.scripts.ai_train_dnn')
 
 
 def train_new_deep_neural_network():

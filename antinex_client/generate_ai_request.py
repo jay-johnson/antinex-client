@@ -1,7 +1,7 @@
 import os
 import json
 import copy
-from spylunking.log.setup_logging import build_colorized_logger
+from spylunking.log.setup_logging import console_logger
 from antinex_client.utils import ppj
 from antinex_client.consts import FAILED
 from antinex_client.consts import SUCCESS
@@ -37,8 +37,8 @@ from antinex_client.consts import ANTINEX_VERSION
 from antinex_client.consts import ANTINEX_CLIENT_DEBUG
 
 
-name = "ai-req"
-log = build_colorized_logger(name=name)
+log = console_logger(
+    name=__name__)
 
 
 def generate_ai_request(

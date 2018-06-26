@@ -2,7 +2,7 @@ import json
 import requests
 import logging
 import time
-from spylunking.log.setup_logging import build_colorized_logger
+from spylunking.log.setup_logging import console_logger
 from antinex_client.utils import ev
 from antinex_client.consts import LOGIN_SUCCESS
 from antinex_client.consts import LOGIN_NOT_ATTEMPTED
@@ -13,7 +13,6 @@ from antinex_client.consts import ERROR
 from antinex_client.consts import NOT_SET
 
 
-name = "ai-client"
 log_level = logging.INFO
 log_level_str = ev(
     "AI_CLIENT_LEVEL",
@@ -29,8 +28,8 @@ elif log_level_str == "critical":
 elif log_level_str == "error":
     log_level = logging.ERROR
 
-log = build_colorized_logger(
-    name=name,
+log = console_logger(
+    name=__name__,
     log_level=log_level)
 
 

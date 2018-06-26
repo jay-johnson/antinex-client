@@ -1,4 +1,4 @@
-from spylunking.log.setup_logging import build_colorized_logger
+from spylunking.log.setup_logging import console_logger
 from antinex_client.ai_client import AIClient
 from antinex_client.consts import ANTINEX_PUBLISH_ENABLED
 from antinex_client.consts import ANTINEX_URL
@@ -12,8 +12,8 @@ from antinex_client.consts import ANTINEX_CLIENT_VERBOSE
 from antinex_client.consts import ANTINEX_CLIENT_DEBUG
 
 
-name = "build-ai-client-from-env"
-log = build_colorized_logger(name=name)
+log = console_logger(
+    name=__name__)
 
 
 def build_ai_client_from_env(

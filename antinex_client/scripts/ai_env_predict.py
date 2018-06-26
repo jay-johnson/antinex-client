@@ -5,7 +5,7 @@ import sys
 import json
 import argparse
 import pandas as pd
-from spylunking.log.setup_logging import build_colorized_logger
+from spylunking.log.setup_logging import console_logger
 from antinex_client.utils import ev
 from antinex_client.utils import ppj
 from antinex_client.consts import LOGIN_FAILED
@@ -16,8 +16,8 @@ from antinex_client.build_ai_client_from_env import build_ai_client_from_env
 from antinex_client.generate_ai_request import generate_ai_request
 
 
-name = "ai-env-client"
-log = build_colorized_logger(name=name)
+log = console_logger(
+    name='antinex_client.scripts.ai_env_predict')
 
 
 def start_predictions():
