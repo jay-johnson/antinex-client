@@ -34,7 +34,7 @@ These are the environment variables used by the AntiNex client.
         "1") == "1")
     ANTINEX_URL = ev(
         "ANTINEX_URL",
-        "http://localhost:8080")
+        "http://localhost:8010")
     ANTINEX_CA_FILE = os.getenv(
         "ANTINEX_CA_FILE",
         None)

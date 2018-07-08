@@ -54,7 +54,7 @@ class AIClient:
                 "password-not-set"),
             url=ev(
                 "API_URL",
-                "http://localhost:8080"),
+                "http://localhost:8010"),
             email=ev(
                 "API_EMAIL",
                 "email-not-set"),

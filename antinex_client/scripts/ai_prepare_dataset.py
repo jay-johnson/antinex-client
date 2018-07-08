@@ -45,7 +45,7 @@ def prepare_new_dataset():
             dest="email")
     parser.add_argument(
             "-a",
-            help="url endpoint with default http://localhost:8080",
+            help="url endpoint with default http://localhost:8010",
             required=False,
             dest="url")
     parser.add_argument(
@@ -78,7 +78,7 @@ def prepare_new_dataset():
         "email-not-set")
     url = ev(
         "API_URL",
-        "http://localhost:8080")
+        "http://localhost:8010")
     prepare_file = ev(
         "DATAFILE",
         "prepare_file-not-set")
@@ -106,7 +106,7 @@ def prepare_new_dataset():
 
     usage = ("Please run with -u <username> "
              "-p <password> -e <email> "
-             "-a <AntiNex URL http://localhost:8080> "
+             "-a <AntiNex URL http://localhost:8010> "
              "-f <path to prepare file>")
 
     valid = True

@@ -43,7 +43,7 @@ def get_prepared_dataset():
             dest="email")
     parser.add_argument(
             "-a",
-            help="url endpoint with default http://localhost:8080",
+            help="url endpoint with default http://localhost:8010",
             required=False,
             dest="url")
     parser.add_argument(
@@ -76,7 +76,7 @@ def get_prepared_dataset():
         "email-not-set")
     url = ev(
         "API_URL",
-        "http://localhost:8080")
+        "http://localhost:8010")
     prepare_id = ev(
         "PREPARE_ID",
         "prepare_id-not-set")
@@ -104,7 +104,7 @@ def get_prepared_dataset():
 
     usage = ("Please run with -u <username> "
              "-p <password> -e <email> "
-             "-a <AntiNex URL http://localhost:8080> -i <prepare_id>")
+             "-a <AntiNex URL http://localhost:8010> -i <prepare_id>")
 
     valid = True
     if not user or user == "user-not-set":

@@ -43,7 +43,7 @@ def get_ml_job_results():
             dest="email")
     parser.add_argument(
             "-a",
-            help="url endpoint with default http://localhost:8080",
+            help="url endpoint with default http://localhost:8010",
             required=False,
             dest="url")
     parser.add_argument(
@@ -76,7 +76,7 @@ def get_ml_job_results():
         "email-not-set")
     url = ev(
         "API_URL",
-        "http://localhost:8080")
+        "http://localhost:8010")
     result_id = ev(
         "RESULT_ID",
         "result_id-not-set")
@@ -104,7 +104,7 @@ def get_ml_job_results():
 
     usage = ("Please run with -u <username> "
              "-p <password> -e <email> "
-             "-a <AntiNex URL http://localhost:8080> -i <result_id>")
+             "-a <AntiNex URL http://localhost:8010> -i <result_id>")
 
     valid = True
     if not user or user == "user-not-set":

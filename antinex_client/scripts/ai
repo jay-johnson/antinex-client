@@ -48,7 +48,7 @@ def train_new_deep_neural_network():
             dest="email")
     parser.add_argument(
             "-a",
-            help="url endpoint with default http://localhost:8080",
+            help="url endpoint with default http://localhost:8010",
             required=False,
             dest="url")
     parser.add_argument(
@@ -81,7 +81,7 @@ def train_new_deep_neural_network():
         "email-not-set")
     url = ev(
         "API_URL",
-        "http://localhost:8080")
+        "http://localhost:8010")
     datafile = ev(
         "DATAFILE",
         "datafile-not-set")
@@ -109,7 +109,7 @@ def train_new_deep_neural_network():
 
     usage = ("Please run with -u <username> "
              "-p <password> -e <email> "
-             "-a <AntiNex URL http://localhost:8080> -f <path to json file>")
+             "-a <AntiNex URL http://localhost:8010> -f <path to json file>")
 
     valid = True
     if not user or user == "user-not-set":
