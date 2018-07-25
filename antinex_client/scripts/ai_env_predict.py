@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-
+import os
 import sys
 import json
 import argparse
@@ -33,43 +33,75 @@ def start_predictions():
     """
 
     parser = argparse.ArgumentParser(
-            description=("Python client to make Predictions "
-                         "using a Pre-trained Deep Neural Network "
-                         "with AntiNex Django Rest Framework"))
+        description=(
+            "Python client to make Predictions "
+            "using a Pre-trained Deep Neural Network "
+            "with AntiNex Django Rest Framework"))
     parser.add_argument(
-            "-f",
-            help=("file to use default ./examples/"
-                  "predict-rows-scaler-full-django.json"),
-            required=False,
-            dest="datafile")
+        "-f",
+        help=(
+            "file to use default ./examples/"
+            "predict-rows-scaler-full-django.json"),
+        required=False,
+        dest="datafile")
     parser.add_argument(
-            "-m",
-            help="send mock data",
-            required=False,
-            dest="use_fake_rows",
-            action="store_true")
+        "-m",
+        help="send mock data",
+        required=False,
+        dest="use_fake_rows",
+        action="store_true")
     parser.add_argument(
-            "-s",
-            help="silent",
-            required=False,
-            dest="silent",
-            action="store_true")
+        "-b",
+        help=(
+            "optional - path to CA bundle directory for "
+            "client encryption over HTTP"),
+        required=False,
+        dest="ca_dir")
     parser.add_argument(
-            "-d",
-            help="debug",
-            required=False,
-            dest="debug",
-            action="store_true")
+        "-c",
+        help=(
+            "optional - path to x509 certificate for "
+            "client encryption over HTTP"),
+        required=False,
+        dest="cert_file")
+    parser.add_argument(
+        "-k",
+        help=(
+            "optional - path to x509 key file for "
+            "client encryption over HTTP"),
+        required=False,
+        dest="key_file")
+    parser.add_argument(
+        "-s",
+        help="silent",
+        required=False,
+        dest="silent",
+        action="store_true")
+    parser.add_argument(
+        "-d",
+        help="debug",
+        required=False,
+        dest="debug",
+        action="store_true")
     args = parser.parse_args()
 
     datafile = ev(
         "DATAFILE",
         "./examples/predict-rows-scaler-full-django.json")
+    ca_dir = os.getenv(
+        "API_CA_BUNDLE_DIR",
+        None)
+    cert_file = os.getenv(
+        "API_CERT_FILE",
+        None)
+    key_file = os.getenv(
+        "API_KEY_FILE",
+        None)
     verbose = bool(str(ev(
-        "ANTINEX_CLIENT_VERBOSE",
+        "API_CLIENT_VERBOSE",
         "1")).lower() == "1")
     debug = bool(str(ev(
-        "ANTINEX_CLIENT_DEBUG",
+        "API_CLIENT_DEBUG",
         "0")).lower() == "1")
 
     use_fake_rows = False
@@ -78,6 +110,12 @@ def start_predictions():
         use_fake_rows = True
     if args.datafile:
         datafile = args.datafile
+    if args.ca_dir:
+        ca_dir = args.ca_dir
+    if args.cert_file:
+        cert_file = args.cert_file
+    if args.key_file:
+        key_file = args.key_file
     if args.silent:
         verbose = False
     if args.debug:
@@ -86,15 +124,20 @@ def start_predictions():
     if verbose:
         log.info("creating client")
 
-    client = build_ai_client_from_env()
+    client = build_ai_client_from_env(
+        ca_dir=ca_dir,
+        cert_file=cert_file,
+        key_file=key_file,
+        verbose=verbose,
+        debug=debug)
 
     if verbose:
         log.info(("loading request in datafile={}")
                  .format(
                     datafile))
 
-# pass in full or partial prediction record dictionaries
-# the generate_ai_request will fill in gaps with defaults
+    # pass in full or partial prediction record dictionaries
+    # the generate_ai_request will fill in gaps with defaults
     fake_rows_for_predicting = [
         {
             "tcp_seq": 1
@@ -121,7 +164,7 @@ def start_predictions():
 
         res_gen = generate_ai_request(
             predict_rows=req_with_org_rows["predict_rows"])
-# end of sending mock data from this file or a file on disk
+    # end of sending mock data from this file or a file on disk
 
     if res_gen["status"] != SUCCESS:
         log.error(("failed generate_ai_request with error={}")

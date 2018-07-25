@@ -59,7 +59,7 @@ class AIClient:
                 "API_EMAIL",
                 "email-not-set"),
             verbose=True,
-            ca_file=None,
+            ca_dir=None,
             cert_file=None,
             key_file=None,
             debug=False):
@@ -70,9 +70,9 @@ class AIClient:
         :param password: password for the user
         :param url: url running the django rest framework
         :param verbose: turn off setup_logging
-        :param ca_file: path to CA file
-        :param cert_file: path to cert
-        :param key_file: path to private key
+        :param ca_dir: optional path to CA bundle dir
+        :param cert_file: optional path to x509 ssl cert file
+        :param key_file: optional path to x509 ssl private key
         :param debug: turn on debugging - this will print passwords to stdout
         """
 
@@ -81,10 +81,15 @@ class AIClient:
         self.password = password
         self.url = url
         self.verbose = verbose
-        self.ca_file = ca_file
+        self.ca_dir = ca_dir
         self.cert_file = cert_file
         self.key_file = key_file
         self.cert = None
+        self.use_verify = False
+        if self.ca_dir:
+            self.use_verify = self.ca_dir
+        elif self.cert_file:
+            self.use_verify = self.cert_file
 
         if self.cert_file and self.key_file:
             self.cert = (
@@ -120,11 +125,11 @@ class AIClient:
         auth_url = self.api_urls["login"]
 
         if self.verbose:
-            log.info(("log in user={} url={} ca_file={} cert={}")
+            log.info(("log in user={} url={} ca_dir={} cert={}")
                      .format(
                         self.user,
                         auth_url,
-                        self.ca_file,
+                        self.ca_dir,
                         self.cert))
 
         use_headers = {
@@ -136,15 +141,18 @@ class AIClient:
         }
 
         if self.debug:
-            log.info(("LOGIN with body={} headers={} url={}")
-                     .format(
-                        login_data,
-                        use_headers,
-                        auth_url))
+            log.info((
+                "LOGIN with body={} headers={} url={} "
+                "verify={} cert={}").format(
+                    login_data,
+                    use_headers,
+                    auth_url,
+                    self.use_verify,
+                    self.cert))
 
         response = requests.post(
             auth_url,
-            verify=self.ca_file,
+            verify=self.use_verify,
             cert=self.cert,
             data=json.dumps(login_data),
             headers=use_headers)
@@ -293,14 +301,17 @@ class AIClient:
         while not_done:
 
             if self.debug:
-                log.info(("JOB attempting to get={} to url={}")
-                         .format(
-                            prepare_id,
-                            url))
+                log.info((
+                    "JOB attempting to get={} to url={} "
+                    "verify={} cert={}").format(
+                        prepare_id,
+                        url,
+                        self.use_verify,
+                        self.cert))
 
             response = requests.get(
                 url,
-                verify=self.ca_file,
+                verify=self.use_verify,
                 cert=self.cert,
                 headers=self.get_auth_header())
 
@@ -397,14 +408,17 @@ class AIClient:
         while not_done:
 
             if self.debug:
-                log.info(("JOB attempting to get={} to url={}")
-                         .format(
-                            job_id,
-                            url))
+                log.info((
+                    "JOB attempting to get={} to url={} "
+                    "verify={} cert={}").format(
+                        job_id,
+                        url,
+                        self.use_verify,
+                        self.cert))
 
             response = requests.get(
                 url,
-                verify=self.ca_file,
+                verify=self.use_verify,
                 cert=self.cert,
                 headers=self.get_auth_header())
 
@@ -501,14 +515,17 @@ class AIClient:
         while not_done:
 
             if self.debug:
-                log.info(("RESULT attempting to get={} to url={}")
-                         .format(
-                            result_id,
-                            url))
+                log.info((
+                    "RESULT attempting to get={} to url={} "
+                    "verify={} cert={}").format(
+                        result_id,
+                        url,
+                        self.use_verify,
+                        self.cert))
 
             response = requests.get(
                 url,
-                verify=self.ca_file,
+                verify=self.use_verify,
                 cert=self.cert,
                 headers=self.get_auth_header())
 
@@ -598,14 +615,17 @@ class AIClient:
         while not_done:
 
             if self.debug:
-                log.info(("JOB attempting to post={} to url={}")
-                         .format(
-                            json.dumps(body),
-                            url))
+                log.info((
+                    "JOB attempting to post={} to url={} "
+                    "verify={} cert={}").format(
+                        json.dumps(body),
+                        url,
+                        self.use_verify,
+                        self.cert))
 
             response = requests.post(
                 url,
-                verify=self.ca_file,
+                verify=self.use_verify,
                 cert=self.cert,
                 data=json.dumps(body),
                 headers=self.get_auth_header())
@@ -872,14 +892,17 @@ class AIClient:
         while not_done:
 
             if self.debug:
-                log.info(("JOB attempting to post={} to url={}")
-                         .format(
-                            json.dumps(body),
-                            url))
+                log.info((
+                    "JOB attempting to post={} to url={} "
+                    "verify={} cert={}").format(
+                        json.dumps(body),
+                        url,
+                        self.use_verify,
+                        self.cert))
 
             response = requests.post(
                 url,
-                verify=self.ca_file,
+                verify=self.use_verify,
                 cert=self.cert,
                 data=json.dumps(body),
                 headers=self.get_auth_header())

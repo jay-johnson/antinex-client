@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 import os
 import sys
 import json
@@ -27,44 +26,45 @@ def prepare_new_dataset():
     """
 
     parser = argparse.ArgumentParser(
-            description=("Python client to Prepare a dataset"))
+        description=(
+            "Python client to Prepare a dataset"))
     parser.add_argument(
-            "-u",
-            help="username",
-            required=False,
-            dest="user")
+        "-u",
+        help="username",
+        required=False,
+        dest="user")
     parser.add_argument(
-            "-p",
-            help="user password",
-            required=False,
-            dest="password")
+        "-p",
+        help="user password",
+        required=False,
+        dest="password")
     parser.add_argument(
-            "-e",
-            help="user email",
-            required=False,
-            dest="email")
+        "-e",
+        help="user email",
+        required=False,
+        dest="email")
     parser.add_argument(
-            "-a",
-            help="url endpoint with default http://localhost:8010",
-            required=False,
-            dest="url")
+        "-a",
+        help="url endpoint with default http://localhost:8010",
+        required=False,
+        dest="url")
     parser.add_argument(
-            "-f",
-            help="file to use default ./examples/test-keras-dnn.json",
-            required=False,
-            dest="prepare_file")
+        "-f",
+        help="file to use default ./examples/test-keras-dnn.json",
+        required=False,
+        dest="prepare_file")
     parser.add_argument(
-            "-s",
-            help="silent",
-            required=False,
-            dest="silent",
-            action="store_true")
+        "-s",
+        help="silent",
+        required=False,
+        dest="silent",
+        action="store_true")
     parser.add_argument(
-            "-d",
-            help="debug",
-            required=False,
-            dest="debug",
-            action="store_true")
+        "-d",
+        help="debug",
+        required=False,
+        dest="debug",
+        action="store_true")
     args = parser.parse_args()
 
     user = ev(
@@ -82,6 +82,15 @@ def prepare_new_dataset():
     prepare_file = ev(
         "DATAFILE",
         "prepare_file-not-set")
+    ca_dir = os.getenv(
+        "API_CA_BUNDLE_DIR",
+        None)
+    cert_file = os.getenv(
+        "API_CERT_FILE",
+        None)
+    key_file = os.getenv(
+        "API_KEY_FILE",
+        None)
     verbose = bool(str(ev(
         "API_VERBOSE",
         "true")).lower() == "true")
@@ -99,15 +108,26 @@ def prepare_new_dataset():
         url = args.url
     if args.prepare_file:
         prepare_file = args.prepare_file
+    if args.ca_dir:
+        ca_dir = args.ca_dir
+    if args.cert_file:
+        cert_file = args.cert_file
+    if args.key_file:
+        key_file = args.key_file
     if args.silent:
         verbose = False
     if args.debug:
         debug = True
 
-    usage = ("Please run with -u <username> "
-             "-p <password> -e <email> "
-             "-a <AntiNex URL http://localhost:8010> "
-             "-f <path to prepare file>")
+    usage = (
+        "Please run with "
+        "-u <username> "
+        "-p <password> "
+        "-a <AntiNex URL http://localhost:8010> "
+        "-f <path to prepare file> "
+        "-b <optional - path to CA bundle directory> "
+        "-c <optional - path to x509 ssl certificate file> "
+        "-k <optional - path to x509 ssl key file>")
 
     valid = True
     if not user or user == "user-not-set":
@@ -141,6 +161,9 @@ def prepare_new_dataset():
         email=email,
         password=password,
         url=url,
+        ca_dir=ca_dir,
+        cert_file=cert_file,
+        key_file=key_file,
         verbose=verbose,
         debug=debug)
 
