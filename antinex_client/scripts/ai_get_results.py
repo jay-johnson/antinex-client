@@ -53,6 +53,27 @@ def get_ml_job_results():
         required=False,
         dest="result_id")
     parser.add_argument(
+        "-b",
+        help=(
+            "optional - path to CA bundle directory for "
+            "client encryption over HTTP"),
+        required=False,
+        dest="ca_dir")
+    parser.add_argument(
+        "-c",
+        help=(
+            "optional - path to x509 certificate for "
+            "client encryption over HTTP"),
+        required=False,
+        dest="cert_file")
+    parser.add_argument(
+        "-k",
+        help=(
+            "optional - path to x509 key file for "
+            "client encryption over HTTP"),
+        required=False,
+        dest="key_file")
+    parser.add_argument(
         "-s",
         help="silent",
         required=False,
