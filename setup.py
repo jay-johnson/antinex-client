@@ -25,6 +25,14 @@ class PyTest(TestCommand):
         errno = pytest.main(shlex.split(self.pytest_args))
         sys.exit(errno)
 
+long_description = ''
+try:
+    import pypandoc
+    long_description = pypandoc.convert(
+        'README.rst',
+        'rst')
+except(IOError, ImportError):
+    long_description = open('README.rst').read()
 
 cur_path, cur_script = os.path.split(sys.argv[0])
 os.chdir(os.path.abspath(cur_path))
@@ -40,6 +48,7 @@ install_requires = [
     "pipenv",
     "pycodestyle<=2.3.1",
     "pylint",
+    "pypandoc",
     "recommonmark",
     "requests",
     "seaborn",
@@ -66,9 +75,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "antinex_client"))
 setup(
     name="antinex-client",
     cmdclass={"test": PyTest},
-    version="1.3.1",
+    version="1.3.2",
     description=("AntiNex Python client"),
-    long_description=("AntiNex Python client"),
+    long_description=long_description,
     author="Jay Johnson",
     author_email="jay.p.h.johnson@gmail.com",
     url="https://github.com/jay-johnson/antinex-client",
