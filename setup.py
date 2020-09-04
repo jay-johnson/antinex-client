@@ -75,6 +75,7 @@ setup(
     cmdclass={"test": PyTest},
     version="1.3.6",
     description=("AntiNex Python client"),
+    long_description_content_type='text/x-rst',
     long_description=long_description,
     author="Jay Johnson",
     author_email="jay.p.h.johnson@gmail.com",
