@@ -161,7 +161,7 @@ def get_ml_job():
     else:
         try:
             job_id = int(job_id)
-        except Exception as e:
+        except Exception:
             log.error("please use -i <job_id with an integer>")
             valid = False
     if not valid:

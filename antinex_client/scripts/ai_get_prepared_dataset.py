@@ -162,7 +162,7 @@ def get_prepared_dataset():
     else:
         try:
             prepare_id = int(prepare_id)
-        except Exception as e:
+        except Exception:
             log.error("please use -i <prepare_id with an integer>")
             valid = False
     if not valid:

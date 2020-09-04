@@ -162,7 +162,7 @@ def get_ml_job_results():
     else:
         try:
             result_id = int(result_id)
-        except Exception as e:
+        except Exception:
             log.error("please use -i <result_id with an integer>")
             valid = False
     if not valid:

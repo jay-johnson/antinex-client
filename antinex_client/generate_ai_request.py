@@ -177,7 +177,7 @@ def generate_ai_request(
                                 new_row[col] = float(cur_value)
                             elif convert_to_type == "int":
                                 new_row[col] = int(cur_value)
-                        except Exception as e:
+                        except Exception:
                             if include_failed_conversions:
                                 new_row[col] = cur_value
                             else:
